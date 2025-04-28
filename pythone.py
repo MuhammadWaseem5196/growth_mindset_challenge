@@ -1,8 +1,8 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
+import plotly.express as px
+import plotly.graph_objects as go
 from sklearn.preprocessing import LabelEncoder
 
 # Set page configuration
@@ -49,25 +49,20 @@ def visualize_data(df):
     if chart_type == "Histogram":
         column = st.selectbox("Select Column for Histogram", df.columns)
         st.write(f"### Histogram of {column}")
-        plt.figure(figsize=(8, 6))
-        df[column].hist(bins=20)
-        plt.xlabel(column)
-        plt.ylabel("Frequency")
-        st.pyplot(plt)
+        fig = px.histogram(df, x=column, nbins=20, title=f"Histogram of {column}")
+        st.plotly_chart(fig)
     
     elif chart_type == "Correlation Heatmap":
         st.write("### Correlation Heatmap")
         correlation_matrix = df.corr()
-        plt.figure(figsize=(8, 6))
-        sns.heatmap(correlation_matrix, annot=True, cmap="coolwarm", fmt=".2f")
-        st.pyplot(plt)
+        fig = px.imshow(correlation_matrix, text_auto=True, color_continuous_scale='Blues', title="Correlation Heatmap")
+        st.plotly_chart(fig)
     
     elif chart_type == "Box Plot":
         column = st.selectbox("Select Column for Box Plot", df.columns)
         st.write(f"### Box Plot of {column}")
-        plt.figure(figsize=(8, 6))
-        sns.boxplot(x=df[column])
-        st.pyplot(plt)
+        fig = px.box(df, y=column, title=f"Box Plot of {column}")
+        st.plotly_chart(fig)
 
 # Function for encoding categorical columns
 def encode_categorical(df):
